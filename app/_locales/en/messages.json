@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "Encrypt copy",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "Encrypy",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "appDescription": {
+    "message": "This extension let's you to copy and paste senstive things but the actual catch here is while the data is in your system's memory it is fully encrypted . Hence, anyother apps which have permission to your clipboard cannot be able to read your sensitive information like your passwords,bank account information etc..",
+    "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "Encrypt copy",
+    "description": "The title of the browser action button"
+  }
+}
