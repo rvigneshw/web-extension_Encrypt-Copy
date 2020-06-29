@@ -2,7 +2,7 @@
   "name": "__MSG_appName__",
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
-  "version": "0.0.1",
+  "version": "0.3",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
@@ -60,6 +60,7 @@
     "storage",
     "contextMenus",
     "tabs",
+    "unlimitedStorage",
     "clipboardRead",
     "clipboardWrite",
     "<all_urls>"

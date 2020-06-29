@@ -6,6 +6,12 @@ let SECRET_TOKEN = null;
 
 browser.runtime.onInstalled.addListener((details) => {
   initializeTheSecretToken();
+  browser.tabs.create({ url: '../pages/popup.html' });
+  if (details.temporary) {
+    setTempDataForTesting();
+  } else {
+
+  }
 });
 
 createContextMenus();
@@ -66,6 +72,15 @@ function initializeTheSecretToken() {
   });
 }
 
+function setTempDataForTesting() {
+  var secret_string = randomString(30);
+  console.log("installed");
+  SECRET_TOKEN = secret_string;
+  browser.storage.local.set({
+    copied_items: getTempData()
+  });
+}
+
 function encryptAndCopyToClipboard(textValue) {
   try {
     if (SECRET_TOKEN == null) {
@@ -97,7 +112,20 @@ function encryptAndCopyToClipboard(textValue) {
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(function () {
-    /* clipboard successfully set */
+    browser.storage.local.get(data => {
+      if (data.copied_items) {
+        var local_copied_items = data.copied_items;
+        var new_item = {
+          time: new Date().toLocaleString(),
+          data: text
+        }
+        local_copied_items.push(new_item);
+        browser.storage.local.set({
+          copied_items: local_copied_items
+        });
+        console.log(local_copied_items);
+      }
+    });
   }, function () {
     /* clipboard write failed */
   });
@@ -137,4 +165,22 @@ function randomString(length) {
 
 function onCreated(p) {
 
+}
+
+function getTempData(params) {
+
+  return [
+    {
+      "time": "6/29/2020, 10:40:03 PM",
+      "data": "U2FsdGVkX19x9UPQbfjJags1A3NVgMcyir2juzpwe68="
+    },
+    {
+      "time": "6/29/2020, 10:40:06 PM",
+      "data": "U2FsdGVkX1+JXJBICXKquVV84nzzyEhTU0fVw1Eq8dU="
+    },
+    {
+      "time": "6/29/2020, 10:40:08 PM",
+      "data": "U2FsdGVkX1+JxbBf47d/KPe36p6p/72TA6oirojf9n0="
+    }
+  ]
 }
