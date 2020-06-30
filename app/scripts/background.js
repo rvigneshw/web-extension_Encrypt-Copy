@@ -4,6 +4,7 @@ const ENC_COPY_ID = "enc-copy-cm";
 const DEC_PASTE_ID = "dec-paste-cm";
 let SECRET_TOKEN = null;
 
+browser.runtime.onMessage.addListener(handleMessages);
 browser.runtime.onInstalled.addListener((details) => {
   initializeTheSecretToken();
   browser.tabs.create({ url: '../pages/popup.html' });
@@ -18,6 +19,28 @@ createContextMenus();
 addListenersToContextMenu();
 addListenersToKeyboardCommands();
 
+
+function handleMessages(request, sender, sendResponse) {
+  console.log(request)
+  if (request.type == "DAV") {
+    decryptAndSendResponse(request, sendResponse);
+  }
+}
+
+function decryptAndSendResponse(request, sendResponse) {
+  if (SECRET_TOKEN == null) {
+    setTheSecretToken();
+  }
+  try {
+    var bytes = CryptoJS.AES.decrypt(request.content, SECRET_TOKEN);
+    var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    console.log(originalText);
+    console.log(request.content);
+    sendResponse({ response: originalText });
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 function addListenersToKeyboardCommands() {
   browser.commands.onCommand.addListener(function (command) {
@@ -84,21 +107,11 @@ function setTempDataForTesting() {
 function encryptAndCopyToClipboard(textValue) {
   try {
     if (SECRET_TOKEN == null) {
-      setTheSecretTokenAndEncryptText();
-    } else {
-      encryptText();
+      setTheSecretToken();
     }
+    encryptText();
   } catch (error) {
     console.log(error);
-  }
-
-  function setTheSecretTokenAndEncryptText() {
-    browser.storage.local.get(data => {
-      if (data.secret_phrase) {
-        SECRET_TOKEN = data.secret_phrase;
-        encryptText();
-      }
-    });
   }
 
   function encryptText() {
@@ -133,30 +146,25 @@ function copyToClipboard(text) {
 function decryptAndPasteFromClipboard() {
   navigator.clipboard.readText().then((text) => {
     if (SECRET_TOKEN == null) {
-      setTheSecretTokenAndDecryptText(text);
-    } else {
-      decryptAndSendData(text);
+      setTheSecretToken();
     }
+    decryptAndSendData(text);
   });
 
-  function setTheSecretTokenAndDecryptText(text) {
-    browser.storage.local.get(data => {
-      if (data.secret_phrase) {
-        SECRET_TOKEN = data.secret_phrase;
-        decryptAndSendData(text);
-      }
-    });
-  }
-
   function decryptAndSendData(text) {
-    var bytes = CryptoJS.AES.decrypt(text, SECRET_TOKEN);
-    var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    var originalText = decryptText(text);
     console.log("Enc Data:" + text);
     console.log("Dec Data:" + originalText);
     browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       browser.tabs.sendMessage(tabs[0].id, { content: originalText }, function (response) { });
     });
   }
+}
+
+function decryptText(text) {
+  var bytes = CryptoJS.AES.decrypt(text, SECRET_TOKEN);
+  var originalText = bytes.toString(CryptoJS.enc.Utf8);
+  return originalText;
 }
 
 function randomString(length) {
@@ -183,4 +191,13 @@ function getTempData(params) {
       "data": "U2FsdGVkX1+JxbBf47d/KPe36p6p/72TA6oirojf9n0="
     }
   ]
+  // return [];
+}
+
+function setTheSecretToken() {
+  browser.storage.local.get(data => {
+    if (data.secret_phrase) {
+      SECRET_TOKEN = data.secret_phrase;
+    }
+  });
 }

@@ -10,7 +10,7 @@
   <script src="../scripts/uikit-icons.min.js"></script>
 </head>
 
-<body style="min-height: 500px; width: 450px;">
+<body style="min-height: 300px; width: 450px;">
   <div id="header_logo_section"
     class="header uk-transition-toggle uk-text-normal uk-margin-small-left uk-margin-small-top uk-text-large">
     <img src="../images/icon.svg" class="uk-transition-scale-up uk-transition-opaque" width="50px" height="50px" />
@@ -24,7 +24,7 @@
             Encrypt Copy is now up & running!
             <br>
             <span class="uk-text-secondary">
-              Complaints/Compliments Email:
+              Complaints / Compliments Email:
             </span>
             <a href="mailto:krvigneshw@gmail.com">
               krvigneshw@gmail.com
@@ -36,7 +36,7 @@
   </div>
   <ul class="uk-tab uk-flex-center" id="js-control" data-uk-tab="{connect:'#main-tab-section'}">
     <li id="collectionstab"><a href="">History
-        <span id="num_of_collections" class="uk-badge">0</span>
+        <span id="num_of_copied_items" class="uk-badge">0</span>
       </a>
     </li>
     <li id="settingstab"><a href="">Settings</a></li>
@@ -45,26 +45,47 @@
   <ul id="main-tab-section" class="uk-switcher uk-margin-small">
     <li>
       <div>
-        <ul class="uk-list uk-list-collapse uk-list-divider" id="history_items">
+        <ul class="uk-list uk-list-collapse uk-list-divider" uk-margin id="history_items">
         </ul>
       </div>
     </li>
     <li>
       <div>
         <label>
-          <input class="uk-checkbox" type="checkbox"> Run the Encrypted Copy / Paste backgroud service.
-        </label>
-        <br>
-        <label>
           <input class="uk-checkbox" type="checkbox"> Enable History service to store copied items for later use.
         </label>
       </div>
     </li>
     <li>
-      <div class="uk-margin-small-left">
-        This extension helps you to protect your credentials from spyware and other malicious programs which keeps
-        looking in your clipboard for the valuable contents such as Passwords,Credit Card number and CVV,Your OTP and so
-        many things even the Email ID you copy can be stolen and used phising emails.
+      <div class="uk-margin-small-left  uk-margin-small-right   uk-text-primary uk-text-capitalize">
+        This extension helps💪 you to protect🛡⚔ your credentials🔐 from,
+        <span class="uk-text-danger uk-text-bolder">spyware💻 and other malicious programs🔎</span> which keeps
+        looking👀 in your clipboard 📃 for the valuable contents 📜 such as
+        <br>
+        <ul class="uk-list uk-list-divider  uk-text-bolder">
+          <li>Passwords 🔑
+            <span class="uk-text-danger uk-text-light">
+              Which can be used to hack your social media accounts😥 and at very bad situation your entire mobile can be
+              hacked.
+            </span>
+          </li>
+          <li>Credit Card number💳 and CVV
+            <span class="uk-text-danger uk-text-light">
+              Which can be used to hack your bank account🤕 and unauthorized purchases in your name or take out cash
+              advances using your account.
+            </span>
+          </li>
+          <li>Your OTP🗝
+            <span class="uk-text-danger uk-text-light">
+              Which can be used fake online payments😨 as well as to change your social media account's passwords.
+            </span>
+          </li>
+          <li>Even the Email ID📩
+            <span class="uk-text-danger uk-text-light">
+              Which can be used to send spam emails📧 which include malicious links and stuffs you find inappropriate🤢
+            </span>
+          </li>
+        </ul>
       </div>
 
     </li>
