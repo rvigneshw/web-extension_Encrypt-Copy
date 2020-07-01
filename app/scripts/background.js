@@ -1,4 +1,4 @@
-var CryptoJS = require("crypto-js");
+import { AES, enc } from "crypto-js";
 
 const ENC_COPY_ID = "enc-copy-cm";
 const DEC_PASTE_ID = "dec-paste-cm";
@@ -32,8 +32,8 @@ function decryptAndSendResponse(request, sendResponse) {
     setTheSecretToken();
   }
   try {
-    var bytes = CryptoJS.AES.decrypt(request.content, SECRET_TOKEN);
-    var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    var bytes = AES.decrypt(request.content, SECRET_TOKEN);
+    var originalText = bytes.toString(enc.Utf8);
     console.log(originalText);
     console.log(request.content);
     sendResponse({ response: originalText });
@@ -91,7 +91,10 @@ function initializeTheSecretToken() {
   SECRET_TOKEN = secret_string;
   browser.storage.local.set({
     secret_phrase: secret_string,
-    copied_items: []
+    copied_items: [],
+    settings: {
+      history: true
+    }
   });
 }
 
@@ -115,7 +118,7 @@ function encryptAndCopyToClipboard(textValue) {
   }
 
   function encryptText() {
-    var encrypted_data = CryptoJS.AES
+    var encrypted_data = AES
       .encrypt(textValue, SECRET_TOKEN).toString();
     console.log("Orginal Text:" + textValue);
     console.log("Enc Data:" + encrypted_data);
@@ -126,17 +129,19 @@ function encryptAndCopyToClipboard(textValue) {
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(function () {
     browser.storage.local.get(data => {
-      if (data.copied_items) {
-        var local_copied_items = data.copied_items;
-        var new_item = {
-          time: new Date().toLocaleString(),
-          data: text
+      if (data.settings.history) {
+        if (data.copied_items) {
+          var local_copied_items = data.copied_items;
+          var new_item = {
+            time: new Date().toLocaleString(),
+            data: text
+          }
+          local_copied_items.push(new_item);
+          browser.storage.local.set({
+            copied_items: local_copied_items
+          });
+          console.log(local_copied_items);
         }
-        local_copied_items.push(new_item);
-        browser.storage.local.set({
-          copied_items: local_copied_items
-        });
-        console.log(local_copied_items);
       }
     });
   }, function () {
@@ -162,8 +167,8 @@ function decryptAndPasteFromClipboard() {
 }
 
 function decryptText(text) {
-  var bytes = CryptoJS.AES.decrypt(text, SECRET_TOKEN);
-  var originalText = bytes.toString(CryptoJS.enc.Utf8);
+  var bytes = AES.decrypt(text, SECRET_TOKEN);
+  var originalText = bytes.toString(enc.Utf8);
   return originalText;
 }
 
@@ -177,21 +182,21 @@ function onCreated(p) {
 
 function getTempData(params) {
 
-  return [
-    {
-      "time": "6/29/2020, 10:40:03 PM",
-      "data": "U2FsdGVkX19x9UPQbfjJags1A3NVgMcyir2juzpwe68="
-    },
-    {
-      "time": "6/29/2020, 10:40:06 PM",
-      "data": "U2FsdGVkX1+JXJBICXKquVV84nzzyEhTU0fVw1Eq8dU="
-    },
-    {
-      "time": "6/29/2020, 10:40:08 PM",
-      "data": "U2FsdGVkX1+JxbBf47d/KPe36p6p/72TA6oirojf9n0="
-    }
-  ]
-  // return [];
+  // return [
+  //   {
+  //     "time": "6/29/2020, 10:40:03 PM",
+  //     "data": "U2FsdGVkX19x9UPQbfjJags1A3NVgMcyir2juzpwe68="
+  //   },
+  //   {
+  //     "time": "6/29/2020, 10:40:06 PM",
+  //     "data": "U2FsdGVkX1+JXJBICXKquVV84nzzyEhTU0fVw1Eq8dU="
+  //   },
+  //   {
+  //     "time": "6/29/2020, 10:40:08 PM",
+  //     "data": "U2FsdGVkX1+JxbBf47d/KPe36p6p/72TA6oirojf9n0="
+  //   }
+  // ]
+  return [];
 }
 
 function setTheSecretToken() {

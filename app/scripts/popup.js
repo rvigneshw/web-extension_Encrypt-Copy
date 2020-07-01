@@ -21,6 +21,15 @@ function handleDELclick(event) {
     var timeStampData = event.srcElement.dataset.timestamp;
     deleteItemFromStorage(timeStampData);
 }
+function handleSettingsChange(event) {
+    var settings_history = document.getElementById("settings_history");
+    var updated_settings = {
+        history: settings_history.checked
+    }
+    browser.storage.local.set({
+        settings: updated_settings
+    });
+}
 
 const EVENT_LISTENER_ARRAY = [
     {
@@ -38,6 +47,10 @@ const EVENT_LISTENER_ARRAY = [
     {
         "class": "del_btn",
         "handler": handleDELclick
+    },
+    {
+        "class": "settings-control",
+        "handler": handleSettingsChange
     }
 ]
 
@@ -56,9 +69,21 @@ function initialize() {
         var listItems = '';
         if (data.copied_items) {
             var local_copied_items = data.copied_items;
+            document.getElementById("settings_history").checked = data.settings.history;
             document.getElementById("num_of_copied_items").innerText = local_copied_items.length;
             local_copied_items.forEach(element => {
-                listItems += `<li>
+                listItems = generateCards(listItems, element);
+            });
+            document.getElementById("history_items")
+                .innerHTML = listItems;
+            EVENT_LISTENER_ARRAY.forEach(element => {
+                attachEventListenerTo(element.class, element.handler);
+            });
+        }
+    });
+
+    function generateCards(listItems, element) {
+        listItems += `<li>
             <div>
         <div class="uk-card uk-card-hover uk-card-default uk-card-small uk-card-body">
             <div class="uk-card-badge uk-label">${element.time}</div>
@@ -85,14 +110,8 @@ function initialize() {
             <p class="uk-text-break">${element.data}</p>
         </div>
     </div></li>`;
-            });
-            document.getElementById("history_items")
-                .innerHTML = listItems;
-            EVENT_LISTENER_ARRAY.forEach(element => {
-                attachEventListenerTo(element.class, element.handler);
-            });
-        }
-    });
+        return listItems;
+    }
 }
 
 function deleteItemFromStorage(timeStamp) {
