@@ -6,12 +6,12 @@ let SECRET_TOKEN = null;
 
 browser.runtime.onMessage.addListener(handleMessages);
 browser.runtime.onInstalled.addListener((details) => {
-  initializeTheSecretToken();
-  browser.tabs.create({ url: '../pages/popup.html' });
+  if (details.reason == "install") {
+    initializeTheSecretToken();
+  }
+  browser.tabs.create({ url: '../pages/intro.html' });
   if (details.temporary) {
     setTempDataForTesting();
-  } else {
-
   }
 });
 

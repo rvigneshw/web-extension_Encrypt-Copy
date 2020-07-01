@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/uikit/css/uikit.min.css">
+    <script src="../scripts/uikit.min.js"></script>
+    <script src="../scripts/uikit-icons.min.js"></script>
+    <title>Encrypt Copy</title>
+</head>
+
+<body>
+    <div class="container uk-margin-medium-left uk-margin-medium-right">
+        <h1 class="uk-heading-bullet uk-margin-medium-top uk-animation-shake">Hey there, Welcome aboard!</h1>
+
+        <div class="uk-child-width-1-1@s uk-grid-match " uk-grid>
+            <div>
+                <div uk-scrollspy="cls: uk-animation-slide-left; repeat: true"
+                    class="uk-card  uk-card-default uk-card-hover uk-card-body">
+                    <h3 class="uk-card-title uk-text-bolder">Problems with current clipboard implementation</h3>
+                    <p>
+                        <span class="uk-text-danger uk-text-bolder">
+                            Spyware💻 and other malicious programs🔎
+                        </span>keeps looking👀 in your clipboard 📃(because clipboard permission is not seen as a threat
+                        by many people. So spywares make use of it and exploit them in various ways!!!) for the valuable
+                        contents 📜 such as
+                        <br>
+                        <ul class="uk-list uk-list-divider  uk-text-bolder">
+                            <li>Passwords 🔑
+                                <span class="uk-text-danger uk-text-light">
+                                    Which can be used to hack your social media accounts😥 and at very bad situation
+                                    your entire mobile can be
+                                    hacked.
+                                </span>
+                            </li>
+                            <li>Credit Card number💳 and CVV
+                                <span class="uk-text-danger uk-text-light">
+                                    Which can be used to hack your bank account🤕 and unauthorized purchases in your
+                                    name or take out cash
+                                    advances using your account.
+                                </span>
+                            </li>
+                            <li>Your OTP🗝
+                                <span class="uk-text-danger uk-text-light">
+                                    Which can be used fake online payments😨 as well as to change your social media
+                                    account's passwords.
+                                </span>
+                            </li>
+                            <li>Even the Email ID📩
+                                <span class="uk-text-danger uk-text-light">
+                                    Which can be used to send spam emails📧 which include malicious links and stuffs you
+                                    find inappropriate🤢
+                                </span>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div uk-scrollspy="cls: uk-animation-slide-right; repeat: true"
+                    class="uk-card  uk-card-primary uk-card-hover uk-card-body">
+                    <h3 class="uk-card-title uk-text-bolder">What this extension does?</h3>
+                    <p>
+                        <span class="uk-text-secondary uk-text-bolder">
+                            This extension encrypts🔐 the text before storing it in the clipboard.The process flow is as
+                            follows
+                        </span>
+                        <ul class="uk-list uk-list-divider uk-text-secondary ">
+                            <li>Get the selected text when you click <span class="uk-badge"> Encrypt and Copy</span>
+                                from the context
+                                menu.
+                            </li>
+                            <li>Encrypts🔐 the text using <span class="uk-badge"> AES encryption</span>
+                            </li>
+                            <li>Stores the text hello
+                                in the clipboard
+                            </li>
+                            <li>Even when you press <span class="uk-badge">Ctrl+V</span> you can only see a
+                                random string (which is the
+                                encrypted data of the text you copied)
+                            </li>
+                            <li>Now when spyware tries to access your clipboard they can only see your encrypted
+                                contents, So your <span class="uk-badge">credentials are safe</span> even when a spyware
+                                get access to your system
+                                clipboard!
+                            </li>
+                            <li class="uk-text-bolder">Well how to get the original copied credential back?
+                            </li>
+                            <li>Place the cursor on any input field and right click to get the context menu , In that
+                                menu look for <span class="uk-badge"> Decrypt and Paste.</span>
+                                When you click that the original data you copied will be pasted in that input field.
+                            </li>
+                        </ul>
+                        <br>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div uk-scrollspy="cls: uk-animation-slide-top; repeat: true"
+                    class="uk-card uk-card-default  uk-card-hover uk-card-body">
+                    <h3 class="uk-card-title uk-text-bolder">Well, how can I believe this?</h3>
+                    <p>If you don't beleive our words that's perfectly fine, Below is a demo section where you can find
+                        it yourself!!!</p>
+                </div>
+            </div>
+            <div>
+                <div uk-scrollspy="cls: uk-animation-slide-bottom; repeat: true"
+                    class="uk-card uk-card-secondary uk-card-hover uk-card-body uk-light">
+                    <h3 class="uk-card-title">Demo Section</h3>
+                    <p>
+                        <ul class="uk-list uk-list-divider uk-text-secondary ">
+                            <li>Get the selected text when you click <span class="uk-badge"> Encrypt and Copy</span>
+                                from the context
+                                menu.
+                                <br>
+                                <span class="uk-text-bolder">Sample text to copy:</span>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </li>
+                            <li>Even when you press <span class="uk-badge">Ctrl+V</span> you can only see a
+                                random string (which is the
+                                encrypted data of the text you copied)
+                                <br>
+                                <div class="uk-margin">
+                                    <input class="uk-input" type="text" placeholder="Click and press `Ctrl+V`">
+                                </div>
+                            </li>
+                            <li class="uk-text-success">Now when spyware tries to access your clipboard they can only
+                                see your encrypted
+                                contents, So your <span class="uk-badge">credentials are safe</span> even when a spyware
+                                get access to your system
+                                clipboard!
+                            </li>
+                            <li class="uk-text-bolder">Well how to get the original copied credential back?
+                            </li>
+                            <li>Place the cursor on any input field and right click to get the context menu , In that
+                                menu look for <span class="uk-badge"> Decrypt and Paste.</span>
+                                When you click that the original data you copied will be pasted in that input field.
+                                <br>
+                                <span class="uk-text-danger">
+                                    Unfortunately ,this action can only performed in web pages only so ,
+                                    <a href="https://www.google.com/">Please goto Google.com</a> and in the search bar
+                                    right
+                                    click and select <span class="uk-badge"> Decrypt and Paste.</span>
+                                </span>
+                                To see your
+                                originally copied text!!!
+                                <br>
+                                Alternatively , You click the extension icon in browser bar and you can see the list of
+                                text you copied in that press
+                                <span class="uk-badge"> More Options </span> >
+                                <span class="uk-badge"> Decrypt and View</span>
+                            </li>
+                        </ul>
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
