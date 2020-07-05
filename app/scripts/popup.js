@@ -37,6 +37,9 @@ function handleClearReset() {
         initialize();
     });
 }
+function handleViewIntroPage() {
+    browser.tabs.create({ url: '../pages/intro.html' });
+}
 
 const EVENT_LISTENER_ARRAY = [
     {
@@ -58,6 +61,10 @@ const EVENT_LISTENER_ARRAY = [
     {
         "class": "clear_reset_btn",
         "handler": handleClearReset
+    },
+    {
+        "class": "view_intro_btn",
+        "handler": handleViewIntroPage
     },
     {
         "class": "settings-control",

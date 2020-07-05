@@ -9,9 +9,10 @@ browser.runtime.onInstalled.addListener((details) => {
   if (details.reason == "install") {
     initializeTheSecretToken();
   }
-  browser.tabs.create({ url: '../pages/intro.html' });
   if (details.temporary) {
     setTempDataForTesting();
+  } else {
+    browser.tabs.create({ url: '../pages/intro.html' });
   }
 });
 
