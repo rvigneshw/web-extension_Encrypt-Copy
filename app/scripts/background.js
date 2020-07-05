@@ -24,6 +24,8 @@ function handleMessages(request, sender, sendResponse) {
   console.log(request)
   if (request.type == "DAV") {
     decryptAndSendResponse(request, sendResponse);
+  } else if (request.type == "CLR_RST") {
+    clearAndReset(sendResponse);
   }
 }
 
@@ -87,7 +89,6 @@ function createContextMenus() {
 
 function initializeTheSecretToken() {
   var secret_string = randomString(30);
-  console.log("installed");
   SECRET_TOKEN = secret_string;
   browser.storage.local.set({
     secret_phrase: secret_string,
@@ -95,6 +96,19 @@ function initializeTheSecretToken() {
     settings: {
       history: true
     }
+  });
+}
+function clearAndReset(response) {
+  var secret_string = randomString(30);
+  SECRET_TOKEN = secret_string;
+  browser.storage.local.set({
+    secret_phrase: secret_string,
+    copied_items: [],
+    settings: {
+      history: true
+    }
+  }).then(() => {
+    response({ response: "Done" });
   });
 }
 

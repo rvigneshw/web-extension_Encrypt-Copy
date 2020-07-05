@@ -30,6 +30,13 @@ function handleSettingsChange(event) {
         settings: updated_settings
     });
 }
+function handleClearReset() {
+    browser.runtime.sendMessage({
+        "type": "CLR_RST"
+    }).then((res) => {
+        initialize();
+    });
+}
 
 const EVENT_LISTENER_ARRAY = [
     {
@@ -47,6 +54,10 @@ const EVENT_LISTENER_ARRAY = [
     {
         "class": "del_btn",
         "handler": handleDELclick
+    },
+    {
+        "class": "clear_reset_btn",
+        "handler": handleClearReset
     },
     {
         "class": "settings-control",
