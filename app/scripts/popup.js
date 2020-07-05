@@ -82,7 +82,7 @@ function updateVersionText() {
 initialize();
 
 function initialize() {
-    browser.storage.local.get(data => {
+    browser.storage.local.get().then((data) => {
         updateVersionText();
         var listItems = '';
         if (data.copied_items) {
@@ -133,7 +133,7 @@ function initialize() {
 }
 
 function deleteItemFromStorage(timeStamp) {
-    browser.storage.local.get(data => {
+    browser.storage.local.get().then((data) => {
         if (data.copied_items) {
             var copied_list = data.copied_items;
             var copied_list_new = copied_list.filter(item => item.time !== timeStamp)
@@ -185,6 +185,6 @@ function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function () {
 
     }, function () {
-        /* clipboard write failed */
+
     });
 }

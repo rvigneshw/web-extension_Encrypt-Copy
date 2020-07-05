@@ -48,10 +48,10 @@
     },
     "dec-paste": {
       "suggested_key": {
-        "default": "Alt+V",
-        "linux": "Alt+V"
+        "default": "Alt+P",
+        "linux": "Alt+P"
       },
-      "description": "Send a 'enc-copy' event"
+      "description": "Send a 'dec-paste' event"
     }
   },
   "permissions": [

@@ -1,7 +1,9 @@
 import { AES, enc } from "crypto-js";
 
-const ENC_COPY_ID = "enc-copy-cm";
-const DEC_PASTE_ID = "dec-paste-cm";
+const ENC_COPY_ID_CM = "enc-copy-cm";
+const ENC_COPY_ID_KC = "enc-copy-kc";
+const DEC_PASTE_ID_CM = "dec-paste-cm";
+const DEC_PASTE_ID_KC = "dec-paste-kc";
 let SECRET_TOKEN = null;
 
 browser.runtime.onMessage.addListener(handleMessages);
@@ -11,6 +13,7 @@ browser.runtime.onInstalled.addListener((details) => {
   }
   if (details.temporary) {
     setTempDataForTesting();
+    printDebugInfo();
   } else {
     browser.tabs.create({ url: '../pages/intro.html' });
   }
@@ -47,7 +50,7 @@ function decryptAndSendResponse(request, sendResponse) {
 
 function addListenersToKeyboardCommands() {
   browser.commands.onCommand.addListener(function (command) {
-    if (command === ENC_COPY_ID) {
+    if (command === "enc-copy") {
       browser.tabs.executeScript({
         code: "window.getSelection().toString();"
       }, function (selection) {
@@ -56,7 +59,7 @@ function addListenersToKeyboardCommands() {
         console.log(textValue);
       });
     }
-    else if (command === DEC_PASTE_ID) {
+    else if (command === "dec-paste") {
       decryptAndPasteFromClipboard();
     }
   });
@@ -65,10 +68,10 @@ function addListenersToKeyboardCommands() {
 function addListenersToContextMenu() {
   browser.contextMenus.onClicked.addListener(function (info, tab) {
     switch (info.menuItemId) {
-      case ENC_COPY_ID:
+      case ENC_COPY_ID_CM:
         encryptAndCopyToClipboard(info.selectionText);
         break;
-      case DEC_PASTE_ID:
+      case DEC_PASTE_ID_CM:
         decryptAndPasteFromClipboard();
         break;
     }
@@ -77,12 +80,12 @@ function addListenersToContextMenu() {
 
 function createContextMenus() {
   browser.contextMenus.create({
-    id: ENC_COPY_ID,
+    id: ENC_COPY_ID_CM,
     title: "Encrypt and Copy",
     contexts: ["selection"]
   }, onCreated);
   browser.contextMenus.create({
-    id: DEC_PASTE_ID,
+    id: DEC_PASTE_ID_CM,
     title: "Decrypt and Paste",
     contexts: ["editable"]
   }, onCreated);
@@ -143,7 +146,7 @@ function encryptAndCopyToClipboard(textValue) {
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(function () {
-    browser.storage.local.get(data => {
+    browser.storage.local.get().then((data) => {
       if (data.settings.history) {
         if (data.copied_items) {
           var local_copied_items = data.copied_items;
@@ -214,8 +217,12 @@ function getTempData(params) {
   return [];
 }
 
+function printDebugInfo() {
+  console.log("SECRET_TOKEN : " + SECRET_TOKEN)
+}
+
 function setTheSecretToken() {
-  browser.storage.local.get(data => {
+  browser.storage.local.get().then((data) => {
     if (data.secret_phrase) {
       SECRET_TOKEN = data.secret_phrase;
     }
