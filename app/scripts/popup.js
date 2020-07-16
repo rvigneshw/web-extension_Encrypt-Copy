@@ -1,3 +1,4 @@
+import { AES, enc } from "crypto-js";
 function attachEventListenerTo(className, eventHandler) {
     var allIcons = document.getElementsByClassName(className);
     for (let i = 0; i < allIcons.length; i++) {
@@ -24,7 +25,8 @@ function handleDELclick(event) {
 function handleSettingsChange(event) {
     var settings_history = document.getElementById("settings_history");
     var updated_settings = {
-        history: settings_history.checked
+        history: settings_history.checked,
+        decrypt: settings_view_decrypt.checked
     }
     browser.storage.local.set({
         settings: updated_settings
@@ -72,10 +74,27 @@ const EVENT_LISTENER_ARRAY = [
     }
 ]
 
-function updateVersionText() {
+function updateVersionTextAndGreetings() {
     var version = browser.runtime.getManifest().version;
     document.getElementById("wand-tools-version-text")
         .innerHTML = `Version : ${version}`;
+
+
+    var greetdate = new Date()
+    var hours = greetdate.getHours()
+    var greetingText = '';
+
+    if (hours < 12) {
+        greetingText = 'Good Morning!';
+    } else if (hours < 18) {
+        greetingText = 'Good Afternoon!';
+    } else if (hours < 20) {
+        greetingText = 'Good Evening!';
+    } else if (hours < 24) {
+        greetingText = 'Good Night!';
+    }
+
+    document.getElementById("greetings").innerHTML = greetingText;
 }
 
 
@@ -83,15 +102,32 @@ initialize();
 
 function initialize() {
     browser.storage.local.get().then((data) => {
-        updateVersionText();
+        console.log(data)
+        updateVersionTextAndGreetings();
         var listItems = '';
         if (data.copied_items) {
             var local_copied_items = data.copied_items;
             document.getElementById("settings_history").checked = data.settings.history;
+            document.getElementById("settings_view_decrypt").checked = data.settings.decrypt;
             document.getElementById("num_of_copied_items").innerText = local_copied_items.length;
             local_copied_items.forEach(element => {
-                listItems = generateCards(listItems, element);
+                if (data.settings.decrypt) {
+                    listItems = generateCards(
+                        listItems,
+                        element.data,
+                        element.time,
+                        decryptText(element.data, data.secret_phrase),
+                        data.settings.decrypt);
+                } else {
+                    listItems = generateCards(
+                        listItems,
+                        element.data,
+                        element.time,
+                        "",
+                        data.settings.decrypt);
+                }
             });
+            console.log(listItems)
             document.getElementById("history_items")
                 .innerHTML = listItems;
             EVENT_LISTENER_ARRAY.forEach(element => {
@@ -100,32 +136,36 @@ function initialize() {
         }
     });
 
-    function generateCards(listItems, element) {
+    function generateCards(listItems, data, time, decData, decrypt) {
         listItems += `<li>
             <div>
         <div class="uk-card uk-card-hover uk-card-default uk-card-small uk-card-body">
-            <div class="uk-card-badge uk-label">${element.time}</div>
+            <div class="uk-card-badge uk-label">${time}</div>
             <span class="uk-text-right uk-text-emphasis uk-text-primary"> 
                 
                 <div class="uk-inline">
                     <button  class="uk-button uk-button-small uk-button-secondary" type="button">More Options</button>
                     <div uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
                         <ul class="uk-nav uk-dropdown-nav">
-                        <li><button data-timestamp="${element.time}" class="del_btn uk-button uk-button-small uk-button-danger uk-width-1-1 uk-margin-small-bottom">Delete</button></li>
-                            <li><button data-data="${element.data}" class="d_v_btn uk-button uk-button-small uk-button-primary uk-width-1-1 uk-margin-small-bottom" type="button">
-                            Decrypt and View
-                            </button></li>
-                            <li><button data-data="${element.data}" class="cc_e_btn uk-button uk-button-small uk-button-primary uk-width-1-1 uk-margin-small-bottom" type="button">
+                        <li><button data-timestamp="${time}" class="del_btn uk-button uk-button-small uk-button-danger uk-width-1-1 uk-margin-small-bottom">Delete</button></li>`
+            +
+            (
+                (decrypt) ?
+                    `` :
+                    `<li><button data-data="${data}" class="d_v_btn uk-button uk-button-small uk-button-primary uk-width-1-1 uk-margin-small-bottom" type="button">Decrypt and View</button></li>`
+            )
+            +
+            `<li><button data-data="${data}" class="cc_e_btn uk-button uk-button-small uk-button-primary uk-width-1-1 uk-margin-small-bottom" type="button">
                             Copy to Clipboard (Encrypted Text)
                             </button></li>
-                            <li><button data-data="${element.data}" class="cc_d_btn uk-button uk-button-small uk-button-primary uk-width-1-1 uk-margin-small-bottom" type="button">
+                            <li><button data-data="${data}" class="cc_d_btn uk-button uk-button-small uk-button-primary uk-width-1-1 uk-margin-small-bottom" type="button">
                             Copy to Clipboard (Decrypted Text)
                             </button></li>
                         </ul>
                     </div>
                 </div>
             </span>
-            <p class="uk-text-break">${element.data}</p>
+            <p class="uk-text-break">${(decrypt) ? decData : data}</p>
         </div>
     </div></li>`;
         return listItems;
@@ -156,7 +196,6 @@ function decryptAndView(data, event) {
         event.srcElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.lastElementChild.innerText = message.response
     }
 }
-
 function decryptAndCopyToClipboard(data) {
     console.log(data)
     browser.runtime.sendMessage({
@@ -168,18 +207,10 @@ function decryptAndCopyToClipboard(data) {
     }
 }
 
-
-
 function handleError(error) {
     console.log(`Error: ${error}`);
 }
 
-function notifyBackgroundPage(e) {
-    var sending = browser.runtime.sendMessage({
-        greeting: "Greeting from the content script"
-    });
-    sending.then(handleResponse, handleError);
-}
 
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function () {
@@ -187,4 +218,15 @@ function copyToClipboard(text) {
     }, function () {
 
     });
+}
+
+function decryptText(text, token) {
+    try {
+        var bytes = AES.decrypt(JSON.stringify({ text }), JSON.stringify({ token }));
+        var originalText = bytes.toString(enc.Utf8);
+        console.log(originalText);
+        return originalText;
+    } catch (error) {
+        console.log(error);
+    }
 }

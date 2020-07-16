@@ -10,12 +10,14 @@ browser.runtime.onMessage.addListener(handleMessages);
 browser.runtime.onInstalled.addListener((details) => {
   if (details.reason == "install") {
     initializeTheSecretToken();
+  } else if (details.reason == "update") {
+    onUpdate();
   }
   if (details.temporary) {
     setTempDataForTesting();
     printDebugInfo();
   } else {
-    browser.tabs.create({ url: '../pages/intro.html' });
+
   }
 });
 
@@ -32,7 +34,9 @@ function handleMessages(request, sender, sendResponse) {
     clearAndReset(sendResponse);
   }
 }
-
+function onUpdate() {
+  browser.tabs.create({ url: '../pages/intro.html#changelog' });
+}
 function decryptAndSendResponse(request, sendResponse) {
   if (SECRET_TOKEN == null) {
     setTheSecretToken();
@@ -101,6 +105,7 @@ function initializeTheSecretToken() {
       history: true
     }
   });
+  browser.tabs.create({ url: '../pages/intro.html' });
 }
 function clearAndReset(response) {
   var secret_string = randomString(30);
@@ -109,7 +114,8 @@ function clearAndReset(response) {
     secret_phrase: secret_string,
     copied_items: [],
     settings: {
-      history: true
+      history: true,
+      decrypt: false
     }
   }).then(() => {
     response({ response: "Done" });
