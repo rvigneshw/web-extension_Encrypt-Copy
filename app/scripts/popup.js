@@ -101,7 +101,7 @@ function updateVersionTextAndGreetings() {
 
     if (hours < 12) {
         greetingText = 'Good Morning!';
-    } else if (hours < 18) {
+    } else if (hours < 16) {
         greetingText = 'Good Afternoon!';
     } else if (hours < 20) {
         greetingText = 'Good Evening!';
