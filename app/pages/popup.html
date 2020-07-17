@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Encrypt Copy</title>
-  <link rel="stylesheet" href="../styles/uikit/css/uikit.min.css">
+  <link rel="stylesheet" href="../styles/popup.css">
+  <link rel="stylesheet" href="../styles/uikit.min.css">
   <script src="../scripts/uikit.min.js"></script>
 </head>
 
@@ -13,13 +14,15 @@
   <div id="header_logo_section"
     class="header uk-transition-toggle uk-text-normal uk-margin-small-left uk-margin-small-top uk-text-large"> <img
       src="../images/icon.svg" class="uk-transition-scale-up uk-transition-opaque" width="50px" height="50px" /> <span
-      class="uk-text-middle">Encrypt Copy</span>
+      class="uk-text-middle">Encrypt Copy
+      <sub><span class="uk-transition-slide-right-medium uk-text-meta uk-text-small" id="wand-tools-version-text">
+        </span></sub>
+    </span>
     <div class="uk-position-top">
       <div class="uk-transition-slide-top-small">
         <div class="uk-margin-small-right uk-margin-small-top uk-text-small  uk-text-right uk-text-emphasis">
           If you love my work, <a class="uk-text-primary" href="https://www.buymeacoffee.com/rvigneshw"> Buy me a
-            Coffee! </a> <span class="uk-text-secondary" id="wand-tools-version-text"> </span> <br> <span
-            class="uk-text-meta uk-text-success">
+            Coffee! </a> <br> <span class="uk-text-meta uk-text-success">
             <span id="greetings"></span>
             <br> <span class="uk-text-secondary"> I'm all
               ears for Feedback: </span> <a href="mailto:krvigneshw@gmail.com" class="uk-text-primary">
@@ -43,8 +46,8 @@
           class="clear_reset_btn uk-button uk-button-small uk-button-danger uk-width-1-1 uk-margin-small-bottom">Clear
           All Data and Reset to Default</button> <label> <input class="uk-checkbox settings-control" type="checkbox"
             id="settings_history"> Enable History service to store copied items for later use. </label>
-        <label> <input class="uk-checkbox settings-control" type="checkbox" id="settings_view_decrypt"> View Decrypted
-          data while showing popup(Not Recommended). </label>
+        <!-- <label> <input class="uk-checkbox settings-control" type="checkbox" id="settings_view_decrypt"> View Decrypted
+          data while showing popup(Not Recommended). </label> -->
       </div>
     </li>
     <li>
@@ -53,9 +56,28 @@
           Introduction</button> <br> This extension helps you to protect your credentials from, <span
           class="uk-text-danger">Spywares and other malicious programs</span> which keep looking in your
         clipboard for the valuable contents such as <br> <span class="uk-list uk-list-divider  uk-text-bolder"> *
-          Passwords <br> * Credit Card number and CVV <br> * Your OTP <br> * Even the Email ID <br> </span> <br> <span
-          class="uk-text-meta"> This extension uses <span class="uk-text-bolder">CryptoJS library</span> to achieve AES
-          Encryption! </span> </div>
+          Passwords <br> * Credit Card number and CVV <br> * Your OTP <br> * Even the Email ID <br> </span> <br>
+        <span class="uk-text-secondary">
+          <em>Credits:</em> <br>
+          Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a>
+          from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> <br>
+          Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
+            href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> <br>
+          Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a
+            href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+          <br>
+          Icons made by <a href="https://www.flaticon.com/authors/bqlqn" title="bqlqn">bqlqn</a> from <a
+            href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+          <br>
+          Icons made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a>
+          from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+          <br>
+          <span class="uk-text-meta"> This extension uses <span class="uk-text-bolder">CryptoJS library</span> to
+            achieve
+            AES
+            Encryption! </span>
+        </span>
+      </div>
     </li>
   </ul>
   <script src="../scripts/popup.js"></script>
