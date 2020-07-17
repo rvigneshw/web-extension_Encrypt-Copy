@@ -8,16 +8,17 @@ let SECRET_TOKEN = null;
 
 browser.runtime.onMessage.addListener(handleMessages);
 browser.runtime.onInstalled.addListener((details) => {
-  if (details.reason == "install") {
-    initializeTheSecretToken();
-  } else if (details.reason == "update") {
-    onUpdate();
-  }
+
   if (details.temporary) {
     setTempDataForTesting();
     printDebugInfo();
+    browser.tabs.create({ url: '../pages/popup.html' });
   } else {
-
+    if (details.reason == "install") {
+      initializeTheSecretToken();
+    } else if (details.reason == "update") {
+      onUpdate();
+    }
   }
 });
 
