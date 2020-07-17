@@ -1,5 +1,4 @@
-import { AES, enc } from "crypto-js";
-const DEBUG = true;
+const DEBUG = false;
 function attachEventListenerTo(className, event, eventHandler) {
     var allElements = document.getElementsByClassName(className);
     for (let i = 0; i < allElements.length; i++) {

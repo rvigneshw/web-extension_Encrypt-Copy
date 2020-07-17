@@ -1,4 +1,5 @@
 import { AES, enc } from "crypto-js";
+const DEBUG = false;
 
 const ENC_COPY_ID_CM = "enc-copy-cm";
 const ENC_COPY_ID_KC = "enc-copy-kc";
@@ -28,7 +29,7 @@ addListenersToKeyboardCommands();
 
 
 function handleMessages(request, sender, sendResponse) {
-  console.log(request)
+  d(request)
   if (request.type == "DAV") {
     decryptAndSendResponse(request, sendResponse);
   } else if (request.type == "CLR_RST") {
@@ -45,11 +46,11 @@ function decryptAndSendResponse(request, sendResponse) {
   try {
     var bytes = AES.decrypt(request.content, SECRET_TOKEN);
     var originalText = bytes.toString(enc.Utf8);
-    console.log(originalText);
-    console.log(request.content);
+    d(originalText);
+    d(request.content);
     sendResponse({ response: originalText });
   } catch (error) {
-    console.log(error)
+    d(error)
   }
 }
 
@@ -61,7 +62,7 @@ function addListenersToKeyboardCommands() {
       }, function (selection) {
         var textValue = selection[0];
         encryptAndCopyToClipboard(textValue);
-        console.log(textValue);
+        d(textValue);
       });
     }
     else if (command === "dec-paste") {
@@ -125,7 +126,7 @@ function clearAndReset(response) {
 
 function setTempDataForTesting() {
   var secret_string = randomString(30);
-  console.log("installed");
+  d("installed");
   SECRET_TOKEN = secret_string;
   browser.storage.local.set({
     copied_items: getTempData()
@@ -139,14 +140,14 @@ function encryptAndCopyToClipboard(textValue) {
     }
     encryptText();
   } catch (error) {
-    console.log(error);
+    d(error);
   }
 
   function encryptText() {
     var encrypted_data = AES
       .encrypt(textValue, SECRET_TOKEN).toString();
-    console.log("Orginal Text:" + textValue);
-    console.log("Enc Data:" + encrypted_data);
+    d("Orginal Text:" + textValue);
+    d("Enc Data:" + encrypted_data);
     copyToClipboard(encrypted_data);
   }
 }
@@ -165,7 +166,7 @@ function copyToClipboard(text) {
           browser.storage.local.set({
             copied_items: local_copied_items
           });
-          console.log(local_copied_items);
+          d(local_copied_items);
         }
       }
     });
@@ -183,8 +184,8 @@ function decryptAndPasteFromClipboard() {
 
   function decryptAndSendData(text) {
     var originalText = decryptText(text);
-    console.log("Enc Data:" + text);
-    console.log("Dec Data:" + originalText);
+    d("Enc Data:" + text);
+    d("Dec Data:" + originalText);
     browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       browser.tabs.sendMessage(tabs[0].id, { content: originalText }, function (response) { });
     });
@@ -225,7 +226,7 @@ function getTempData(params) {
 }
 
 function printDebugInfo() {
-  console.log("SECRET_TOKEN : " + SECRET_TOKEN)
+  d("SECRET_TOKEN : " + SECRET_TOKEN)
 }
 
 function setTheSecretToken() {
@@ -234,4 +235,7 @@ function setTheSecretToken() {
       SECRET_TOKEN = data.secret_phrase;
     }
   });
+}
+function d(data) {
+  if (DEBUG) console.log(data);
 }
